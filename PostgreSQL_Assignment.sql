@@ -67,23 +67,26 @@ INSERT INTO rangers (name, region)
 VALUES ('Derek Fox', 'Coastal Plains');
 
 
+-- Count unique species ever sighted.
+
 
 SELECT COUNT(DISTINCT species_id) AS unique_species_count
 FROM sightings;
 
+-- Find all sightings where the location includes "Pass".
 
 SELECT *
 FROM sightings
 WHERE location ILIKE '%Pass%';
 
-
+-- List each ranger's name and their total number of sightings.
 
 SELECT rangers.name, COUNT(sightings.sighting_id) AS total_sightings
 FROM rangers
 JOIN sightings ON rangers.ranger_id = sightings.ranger_id
 GROUP BY rangers.name;
 
-
+-- List species that have never been sighted.
 
 SELECT common_name
 FROM species
@@ -91,6 +94,8 @@ WHERE species_id NOT IN (
   SELECT DISTINCT species_id FROM sightings
 );
 
+
+-- Show the most recent 2 sightings.
 
 SELECT sp.common_name, s.sighting_time, r.name
 FROM sightings s
@@ -100,12 +105,14 @@ ORDER BY s.sighting_time DESC
 LIMIT 2;
 
 
+-- Update all species discovered before year 1800 to have status 'Historic'.
+
 UPDATE species
 SET conservation_status = 'Historic'
 WHERE discovery_date < '1800-01-01';
 
-SELECT * FROM species;
 
+-- Label each sighting's time of day as 'Morning', 'Afternoon', or 'Evening'.
 
 SELECT sighting_id,
   CASE
@@ -116,7 +123,7 @@ SELECT sighting_id,
 FROM sightings;
 
 
-
+-- Delete rangers who have never sighted any species
 
 DELETE FROM rangers
 WHERE ranger_id NOT IN (
